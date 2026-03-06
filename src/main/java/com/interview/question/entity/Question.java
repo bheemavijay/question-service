@@ -25,6 +25,12 @@ public class Question {
 
     private String difficulty;
 
+    @Column(length = 5000)
+    private String answer;
+
+    @Column(length = 5000)
+    private String explanation;
+
     private LocalDateTime createdAt;
 
     @PrePersist

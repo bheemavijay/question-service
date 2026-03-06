@@ -3,6 +3,7 @@ package com.interview.question.service;
 import com.interview.question.dto.QuestionRequest;
 import com.interview.question.dto.QuestionResponse;
 import com.interview.question.entity.Question;
+import com.interview.question.exception.ResourceNotFoundException;
 import com.interview.question.repository.QuestionRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -26,13 +27,52 @@ public class QuestionService {
                 .description(request.getDescription())
                 .category(request.getCategory())
                 .difficulty(request.getDifficulty())
+                .answer(request.getAnswer())
+                .explanation(request.getExplanation())
                 .build();
         Question savedQuestion = questionRepository.save(question);
         return mapToResponse(savedQuestion);
     }
 
+    public List<QuestionResponse> createBulkQuestions(List<QuestionRequest> requests) {
+        List<Question> questions = requests.stream()
+                .map(request -> Question.builder()
+                        .title(request.getTitle())
+                        .description(request.getDescription())
+                        .category(request.getCategory())
+                        .difficulty(request.getDifficulty())
+                        .answer(request.getAnswer())
+                        .explanation(request.getExplanation())
+                        .build())
+                .collect(Collectors.toList());
+        
+        List<Question> savedQuestions = questionRepository.saveAll(questions);
+        return savedQuestions.stream()
+                .map(this::mapToResponse)
+                .collect(Collectors.toList());
+    }
+
+    public QuestionResponse updateQuestion(Long id, QuestionRequest request) {
+        Question question = questionRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Question not found with id: " + id));
+        
+        question.setTitle(request.getTitle());
+        question.setDescription(request.getDescription());
+        question.setCategory(request.getCategory());
+        question.setDifficulty(request.getDifficulty());
+        question.setAnswer(request.getAnswer());
+        question.setExplanation(request.getExplanation());
+        
+        Question updatedQuestion = questionRepository.save(question);
+        return mapToResponse(updatedQuestion);
+    }
+
     public Page<QuestionResponse> getAllQuestions(Pageable pageable) {
         return questionRepository.findAll(pageable).map(this::mapToResponse);
+    }
+
+    public Page<QuestionResponse> getQuestionsByFilter(String category, String difficulty, Pageable pageable) {
+        return questionRepository.findByFilters(category, difficulty, pageable).map(this::mapToResponse);
     }
 
     public List<QuestionResponse> getQuestionsByCategory(String category) {
@@ -49,13 +89,13 @@ public class QuestionService {
 
     public QuestionResponse getQuestionById(Long id) {
         Question question = questionRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Question not found with id: " + id));
+                .orElseThrow(() -> new ResourceNotFoundException("Question not found with id: " + id));
         return mapToResponse(question);
     }
 
     public void deleteQuestion(Long id) {
         if (!questionRepository.existsById(id)) {
-            throw new RuntimeException("Question not found with id: " + id);
+            throw new ResourceNotFoundException("Question not found with id: " + id);
         }
         questionRepository.deleteById(id);
     }
@@ -63,7 +103,7 @@ public class QuestionService {
     public QuestionResponse getRandomQuestion() {
         long count = questionRepository.count();
         if (count == 0) {
-            throw new RuntimeException("No questions available");
+            throw new ResourceNotFoundException("No questions available");
         }
         Random random = new Random();
         int index = random.nextInt((int) count);
@@ -72,7 +112,7 @@ public class QuestionService {
         if (questionPage.hasContent()) {
             return mapToResponse(questionPage.getContent().get(0));
         }
-        throw new RuntimeException("No questions available");
+        throw new ResourceNotFoundException("No questions available");
     }
 
     private QuestionResponse mapToResponse(Question question) {
@@ -82,6 +122,8 @@ public class QuestionService {
                 .description(question.getDescription())
                 .category(question.getCategory())
                 .difficulty(question.getDifficulty())
+                .answer(question.getAnswer())
+                .explanation(question.getExplanation())
                 .createdAt(question.getCreatedAt())
                 .build();
     }

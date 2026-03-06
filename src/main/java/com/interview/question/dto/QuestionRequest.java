@@ -21,4 +21,8 @@ public class QuestionRequest {
     private String category;
 
     private String difficulty;
+
+    private String answer;
+
+    private String explanation;
 }

@@ -17,5 +17,7 @@ public class QuestionResponse {
     private String description;
     private String category;
     private String difficulty;
+    private String answer;
+    private String explanation;
     private LocalDateTime createdAt;
 }

@@ -26,12 +26,32 @@ public class QuestionController {
         return new ResponseEntity<>(questionService.createQuestion(request), HttpStatus.CREATED);
     }
 
+    @PostMapping("/bulk")
+    public ResponseEntity<List<QuestionResponse>> createBulkQuestions(@RequestBody List<QuestionRequest> requests) {
+        return new ResponseEntity<>(questionService.createBulkQuestions(requests), HttpStatus.CREATED);
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<QuestionResponse> updateQuestion(@PathVariable Long id, @Valid @RequestBody QuestionRequest request) {
+        return ResponseEntity.ok(questionService.updateQuestion(id, request));
+    }
+
     @GetMapping
     public ResponseEntity<Page<QuestionResponse>> getAllQuestions(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size) {
         Pageable pageable = PageRequest.of(page, size);
         return ResponseEntity.ok(questionService.getAllQuestions(pageable));
+    }
+
+    @GetMapping("/filter")
+    public ResponseEntity<Page<QuestionResponse>> getQuestionsByFilter(
+            @RequestParam(required = false) String category,
+            @RequestParam(required = false) String difficulty,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        return ResponseEntity.ok(questionService.getQuestionsByFilter(category, difficulty, pageable));
     }
 
     @GetMapping("/category/{category}")

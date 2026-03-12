@@ -76,7 +76,13 @@ public class QuestionController {
     }
 
     @GetMapping("/random")
-    public ResponseEntity<QuestionResponse> getRandomQuestion() {
-        return ResponseEntity.ok(questionService.getRandomQuestion());
+    public ResponseEntity<List<Long>> getRandomQuestionIds(
+            @RequestParam(defaultValue = "5") int limit) {
+        return ResponseEntity.ok(questionService.getRandomQuestionIds(limit));
+    }
+
+    @PostMapping("/getQuestions")
+    public ResponseEntity<List<QuestionResponse>> getQuestionsFromIds(@RequestBody List<Long> questionIds) {
+        return ResponseEntity.ok(questionService.getQuestionsFromIds(questionIds));
     }
 }

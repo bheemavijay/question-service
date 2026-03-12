@@ -11,6 +11,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Random;
 import java.util.stream.Collectors;
@@ -100,19 +101,23 @@ public class QuestionService {
         questionRepository.deleteById(id);
     }
 
-    public QuestionResponse getRandomQuestion() {
-        long count = questionRepository.count();
-        if (count == 0) {
-            throw new ResourceNotFoundException("No questions available");
-        }
-        Random random = new Random();
-        int index = random.nextInt((int) count);
-        Page<Question> questionPage = questionRepository.findAll(PageRequest.of(index, 1));
-        
-        if (questionPage.hasContent()) {
-            return mapToResponse(questionPage.getContent().get(0));
-        }
-        throw new ResourceNotFoundException("No questions available");
+    public List<Long> getRandomQuestionIds(int limit) {
+        List<Question> questions = questionRepository.findAll();
+        Collections.shuffle(questions);
+
+        return questions.stream()
+                .limit(limit)
+                .map(Question::getId)
+                .toList();
+    }
+
+    public List<QuestionResponse> getQuestionsFromIds(List<Long> ids) {
+
+        List<Question> questions = questionRepository.findAllById(ids);
+
+        return questions.stream()
+                .map(this::mapToResponse)
+                .toList();
     }
 
     private QuestionResponse mapToResponse(Question question) {

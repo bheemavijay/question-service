@@ -36,7 +36,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n    \"title\": \"What is Spring Boot?\",\n    \"description\": \"Explain the core concepts of Spring Boot.\",\n    \"category\": \"Java\",\n    \"difficulty\": \"Easy\"\n}"
+					"raw": "{\n    \"title\": \"What is Spring Boot?\",\n    \"description\": \"Explain the core concepts of Spring Boot.\",\n    \"category\": \"Java\",\n    \"difficulty\": \"Easy\",\n    \"answer\": \"Spring Boot is an open source Java-based framework used to create a micro Service.\",\n    \"explanation\": \"It provides an easy way to create stand-alone, production-grade Spring based Applications that you can just run.\"\n}"
 				},
 				"url": {
 					"raw": "{{baseUrl}}/api/questions",
@@ -46,6 +46,62 @@
 					"path": [
 						"api",
 						"questions"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Bulk Create Questions",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "[\n    {\n        \"title\": \"What is JPA?\",\n        \"description\": \"Explain JPA in detail.\",\n        \"category\": \"Java\",\n        \"difficulty\": \"Medium\",\n        \"answer\": \"Java Persistence API (JPA) is a Java specification for accessing, persisting, and managing data between Java objects/classes and a relational database.\",\n        \"explanation\": \"It is a standard approach for Object Relational Mapping (ORM).\"\n    },\n    {\n        \"title\": \"What is Hibernate?\",\n        \"description\": \"Explain Hibernate in detail.\",\n        \"category\": \"Java\",\n        \"difficulty\": \"Medium\",\n        \"answer\": \"Hibernate is a Java framework that simplifies the development of Java application to interact with the database.\",\n        \"explanation\": \"It is an open source, lightweight, ORM (Object Relational Mapping) tool.\"\n    }\n]"
+				},
+				"url": {
+					"raw": "{{baseUrl}}/api/questions/bulk",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"api",
+						"questions",
+						"bulk"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Update Question by ID",
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"title\": \"Updated: What is Spring Boot?\",\n    \"description\": \"Updated: Explain the core concepts of Spring Boot.\",\n    \"category\": \"Java Spring\",\n    \"difficulty\": \"Medium\",\n    \"answer\": \"Updated: Spring Boot is an open source Java-based framework used to create a micro Service.\",\n    \"explanation\": \"Updated: It provides an easy way to create stand-alone, production-grade Spring based Applications that you can just run.\"\n}"
+				},
+				"url": {
+					"raw": "{{baseUrl}}/api/questions/1",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"api",
+						"questions",
+						"1"
 					]
 				}
 			},
@@ -73,6 +129,43 @@
 						{
 							"key": "size",
 							"value": "5"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Filter Questions",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{baseUrl}}/api/questions/filter?category=Java&difficulty=Easy&page=0&size=10",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"api",
+						"questions",
+						"filter"
+					],
+					"query": [
+						{
+							"key": "category",
+							"value": "Java"
+						},
+						{
+							"key": "difficulty",
+							"value": "Easy"
+						},
+						{
+							"key": "page",
+							"value": "0"
+						},
+						{
+							"key": "size",
+							"value": "10"
 						}
 					]
 				}
@@ -152,6 +245,34 @@
 						"api",
 						"questions",
 						"random"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Questions From IDs",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "[\n    1,\n    2,\n    3\n]"
+				},
+				"url": {
+					"raw": "{{baseUrl}}/api/questions/getQuestions",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"api",
+						"questions",
+						"getQuestions"
 					]
 				}
 			},

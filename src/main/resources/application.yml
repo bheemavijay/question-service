@@ -5,9 +5,9 @@ spring:
   application:
     name: question-service
   datasource:
-    url: jdbc:postgresql://ep-rapid-sound-a1kaofxv-pooler.ap-southeast-1.aws.neon.tech/interviewdb?sslmode=require&channel_binding=require
-    username: neondb_owner
-    password: npg_mNdp0bjfCsX9
+    url: ${SPRING_DATASOURCE_URL}
+    username: ${SPRING_DATASOURCE_USERNAME}
+    password: ${SPRING_DATASOURCE_PASSWORD}
     driver-class-name: org.postgresql.Driver
 
   jpa:
